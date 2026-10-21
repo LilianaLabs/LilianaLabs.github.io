@@ -48,7 +48,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000 30%,transparent 100%);-webkit-mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000 30%,transparent 100%)}
 
 /* ── GLOBE LABELS ── */
-.geo-tag{position:fixed;left:0;top:0;z-index:2;pointer-events:none;opacity:0;will-change:transform,opacity}
+.geo-tag{position:fixed;left:0;top:0;z-index:0;pointer-events:none;opacity:0;will-change:transform,opacity}
 .geo-city i{position:absolute;left:-9px;top:-9px;width:18px;height:18px;border:1.5px solid var(--ink);border-radius:50%}
 .geo-city i::before{content:'';position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px 0 0 -2px;background:var(--ink);border-radius:50%}
 .geo-city i::after{content:'';position:absolute;inset:-6px;border:1px solid var(--ink);border-radius:50%;animation:ping-ring 1.8s var(--ease) infinite}
@@ -173,7 +173,7 @@ main{position:relative;z-index:1}
 .socials a{display:flex;justify-content:space-between;padding:.7rem 0;border-bottom:1px dashed var(--line);text-decoration:none;font-size:1.05rem;transition:color .3s,padding .5s var(--ease)}
 .socials a:hover{color:var(--signal);padding-left:.4rem}
 
-.term{margin-top:1rem;padding:.8rem 1rem;border:1px solid var(--ink);background:rgba(232,230,223,.7);white-space:pre-wrap;text-transform:none;letter-spacing:.02em;color:var(--ink-2);font-size:.72rem;line-height:1.7;min-height:6.4em}
+.term{margin-top:1rem;padding:.8rem 1rem;border:1px solid var(--ink);background:rgba(232,230,223,.7);white-space:pre-wrap;text-transform:none;letter-spacing:.02em;color:var(--ink-2);font-size:.72rem;line-height:1.7;min-height:calc(5 * 1.7em + 1.6rem);overflow:hidden}
 .term .ps{color:var(--signal)}
 .term .ok{color:var(--ink)}
 
@@ -215,7 +215,7 @@ main{position:relative;z-index:1}
   .hud-meta{gap:.8rem}
   .hud-bottom{display:none}
   .scene{min-height:140vh;align-items:flex-end;padding:55vh var(--g) 12vh}
-  .panel{width:100%;background:rgba(232,230,223,.86);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid var(--line);padding:1.2rem}
+  .panel{width:100%;background:var(--paper);border:1px solid var(--line);padding:1.2rem}
   .hero{min-height:100vh;min-height:100svh;padding:0 var(--g) 1.4rem}
   .hero .panel,.contact .panel{grid-template-columns:1fr;gap:1.2rem;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;border:0;border-top:1px solid var(--ink);padding:1rem 0 0}
   .hero-side{align-items:flex-start;text-align:left}
@@ -398,7 +398,7 @@ main{position:relative;z-index:1}
       <div class="rv">
         <span class="tag mono" data-i18n="c.tag">[08] contact · ping me — open to internships</span>
         <pre class="term mono" id="term" aria-live="polite"><span class="ps">$</span> ping liliana
-PING liliana (Tashkent, UZ): 56 data bytes</pre>
+PING liliana (Tashkent): 56 bytes</pre>
         <div style="margin-top:1rem"><a href="mailto:Lsuleymanova@aut-edu.uz" class="mail">Lsuleymanova@aut-edu.uz</a></div>
         <div class="contact-actions">
           <button class="btn btn-sig" id="pingBtn" type="button" data-i18n="c.ping">Send ping ⟶</button>
@@ -602,7 +602,7 @@ function sendPing() {
   pingStart = performance.now() / 1000;
   const line = document.createElement('span');
   line.className = 'ok';
-  line.textContent = `\n64 bytes from liliana: icmp_seq=${seq++} ttl=64 time<24h`;
+  line.textContent = `\n64 bytes from liliana: seq=${seq++} time<24h`;
   setTimeout(() => {
     term.appendChild(line);
     const extra = term.querySelectorAll('.ok');
@@ -859,7 +859,7 @@ async function init() {
     uTime: { value: 0 },
     uPing: { value: 99 },
     uWName: { value: 0 }, uWPort: { value: 0 }, uWCube: { value: 0 }, uWNet: { value: 0 }, uWBrace: { value: 0 },
-    uFxT: { value: 0 }, uRepel: { value: 0 },
+    uFxT: { value: 0 }, uRepel: { value: 0 }, uScaleK: { value: 1 },
     uMouse: { value: new THREE.Vector3(99, 99, 0) },
     uTash: { value: sph(TASHKENT[0], TASHKENT[1]) },
     uMarkerOn: { value: 0 },
@@ -873,7 +873,7 @@ async function init() {
     vertexShader: /* glsl */`
       uniform float uSize, uPR, uScanY, uMarkerOn, uMode, uTime, uPing;
       // per-scene effects: how much of each shape is on screen, and seconds since its scene became active
-      uniform float uWName, uWPort, uWCube, uWNet, uWBrace, uFxT, uRepel;
+      uniform float uWName, uWPort, uWCube, uWNet, uWBrace, uFxT, uRepel, uScaleK;
       uniform vec3 uMouse, uTash;
       attribute float aRand, aHot;
       varying float vDepth, vScan, vMark, vFront, vPing, vFx, vAlpha;
@@ -929,7 +929,7 @@ async function init() {
         float land = uMarkerOn * (1.0 - step(0.1, aHot));
         vFront *= 1.0 - ocean * 0.75;
         float s = uSize * (0.55 + aRand * 0.9) * (1.0 + vScan * 1.1 + vFx * 1.2 + isHot * (aHot > 1.5 ? 0.7 : 0.15) + isHot * pulse * 1.8 + uMode * 0.6) * (1.0 - ocean * 0.45 + land * 0.3);
-        gl_PointSize = s * uPR * (12.0 / -mv.z);
+        gl_PointSize = s * uScaleK * uPR * (12.0 / -mv.z);
       }`,
     fragmentShader: /* glsl */`
       uniform vec3 uInk, uSignal;
@@ -978,7 +978,7 @@ async function init() {
       const sh = shapes[sec.dataset.shape], side = sec.dataset.side;
       let x = 0, y = 0, aw = visW * 0.88, ah = visH * 0.6;
       if (!narrow && side !== 'center') { x = (side === 'left' ? 1 : -1) * visW * 0.23; aw = visW * 0.46; ah = visH * 0.72; }
-      else if (narrow) { y = visH * 0.2; ah = visH * 0.42; }
+      else if (narrow) { y = visH * 0.2; ah = visH * 0.42; if (sec.dataset.shape === 'hi') { y = visH * 0.3; ah = visH * 0.26; } }
       else { y = visH * 0.1; }
       if (sec.dataset.shape === 'name') aw *= 0.85; // leave air around the name on wide screens
       return { x, y, s: Math.min(1.3, aw / sh.w, ah / sh.h) };
@@ -1052,6 +1052,8 @@ async function init() {
     const fe = ease(st.f), la = layouts[st.i], lb = layouts[st.j];
     group.position.set(lerp(la.x, lb.x, fe), lerp(la.y, lb.y, fe), 0);
     group.scale.setScalar(lerp(la.s, lb.s, fe));
+    // a shape drawn small (the name on a phone) gets finer points, so letters stay crisp instead of merging
+    uniforms.uScaleK.value = clamp(group.scale.x * 1.4, 0.4, 1);
     smx = lerp(smx, mx, 0.05); smy = lerp(smy, my, 0.05);
     const ra = baseRot[keyI], rb = baseRot[keyJ];
     const sway = reduce ? 0 : Math.sin(t * 0.3) * 0.16 * (1 - uniforms.uMarkerOn.value);
