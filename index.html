@@ -47,6 +47,10 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   background-size:calc(100% / 12) calc(100% / 8);opacity:.35;
   mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000 30%,transparent 100%);-webkit-mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,#000 30%,transparent 100%)}
 
+/* shown until the first frame of the cloud is drawn */
+.loading{position:fixed;left:50%;top:38%;transform:translate(-50%,-50%);z-index:0;color:var(--ink-2);transition:opacity .6s}
+.no-js .loading,.cloud-ready .loading,.no-webgl .loading{opacity:0}
+
 /* ── GLOBE LABELS ── */
 .geo-tag{position:fixed;left:0;top:0;z-index:0;pointer-events:none;opacity:0;will-change:transform,opacity}
 .geo-city i{position:absolute;left:-9px;top:-9px;width:18px;height:18px;border:1.5px solid var(--ink);border-radius:50%}
@@ -236,6 +240,7 @@ main{position:relative;z-index:1}
 
 <canvas id="cloud" aria-hidden="true"></canvas>
 <div class="grid" aria-hidden="true"></div>
+<div class="loading mono" aria-hidden="true"><span data-i18n="ui.loading">scanning</span><span class="caret">_</span></div>
 <div class="geo-tag geo-city" id="tagCity" aria-hidden="true"><i></i><span class="mono"><span data-i18n="geo.city">Tashkent</span><small>41.31°N 69.24°E</small></span></div>
 <div class="geo-tag geo-country" id="tagCountry" aria-hidden="true"><span class="mono" data-i18n="geo.country">Uzbekistan</span></div>
 
@@ -421,7 +426,7 @@ PING liliana (Tashkent): 56 bytes</pre>
 (() => {
   const RU = {
     'geo.city': 'Ташкент', 'geo.country': 'Узбекистан',
-    'ui.menu': 'Меню', 'ui.close': 'Закрыть', 'ui.copy': 'Скопировать почту', 'ui.copied': 'Скопировано ✓',
+    'ui.loading': 'сканирую', 'ui.menu': 'Меню', 'ui.close': 'Закрыть', 'ui.copy': 'Скопировать почту', 'ui.copied': 'Скопировано ✓',
     'a.top': 'Лилиана Сулейманова — наверх', 'a.lang': 'Язык', 'a.nav': 'Разделы',
     'nav.hello': 'привет', 'nav.me': 'обо мне', 'nav.origin': 'откуда', 'nav.featured': 'главное', 'nav.stack': 'стек', 'nav.method': 'метод', 'nav.work': 'лаборатория', 'nav.contact': 'контакты',
     'hero.h1': 'Лилиана Сулейманова — студентка Computer Science из Ташкента',
@@ -629,6 +634,11 @@ $$('[data-mode]').forEach(b => b.addEventListener('click', () => {
 let mx = 0, my = 0;
 const hudXY = $('#hudXY');
 let lastMove = -1e9;
+addEventListener('pointerdown', e => {
+  lastMove = performance.now();
+  mx = e.clientX / innerWidth * 2 - 1;
+  my = e.clientY / innerHeight * 2 - 1;
+}, { passive: true });
 addEventListener('pointermove', e => {
   lastMove = performance.now();
   mx = e.clientX / innerWidth * 2 - 1;
@@ -642,12 +652,12 @@ if (new URLSearchParams(location.search).has('static')) { root.classList.add('no
 else init().catch(err => { console.error(err); root.classList.add('no-webgl'); $('#hudPts').textContent = 'static mode'; });
 
 async function init() {
-  // two CDNs: if one is blocked or slow on a mobile network, the other still delivers Three.js
-  let THREE;
-  for (const url of ['https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js', 'https://unpkg.com/three@0.160.0/build/three.module.min.js']) {
-    try { THREE = await import(url); break; } catch (e) { console.warn('Three.js failed from', url); }
-  }
-  if (!THREE) throw new Error('Three.js unavailable');
+  // Three.js ships with the site (vendor/, MIT licence), so it loads from the same server as the page.
+  // If that copy is unreachable (e.g. the page was opened as a local file), race two CDNs instead.
+  const THREE = await import('./vendor/three.module.min.js').catch(() => Promise.any([
+    import('https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js'),
+    import('https://unpkg.com/three@0.160.0/build/three.module.min.js'),
+  ])).catch(() => { throw new Error('Three.js unavailable'); });
   const canvas = $('#cloud');
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
@@ -857,7 +867,7 @@ async function init() {
     uPR: { value: renderer.getPixelRatio() },
     uScanY: { value: -99 },
     uTime: { value: 0 },
-    uPing: { value: 99 },
+    uPing: { value: 99 }, uFade: { value: 1 },
     uWName: { value: 0 }, uWPort: { value: 0 }, uWCube: { value: 0 }, uWNet: { value: 0 }, uWBrace: { value: 0 },
     uFxT: { value: 0 }, uRepel: { value: 0 }, uScaleK: { value: 1 },
     uMouse: { value: new THREE.Vector3(99, 99, 0) },
@@ -933,7 +943,7 @@ async function init() {
       }`,
     fragmentShader: /* glsl */`
       uniform vec3 uInk, uSignal;
-      uniform float uMode;
+      uniform float uMode, uFade;
       varying float vDepth, vScan, vMark, vFront, vPing, vFx, vAlpha;
       vec3 turbo(float x){
         const vec4 kR = vec4(0.13572138, 4.61539260, -42.66032258, 132.13108234);
@@ -953,7 +963,7 @@ async function init() {
         float a = smoothstep(0.5, 0.3, d);
         vec3 col = mix(uInk, turbo(mix(0.95, 0.08, vDepth)), uMode);
         col = mix(col, uSignal, max(max(vScan * 0.85 * (1.0 - uMode), vMark), max(vPing, vFx * (1.0 - uMode * 0.5))));
-        float alpha = a * mix(mix(0.88, 0.3, vDepth), 0.95, uMode);
+        float alpha = a * mix(mix(0.88, 0.3, vDepth), 0.95, uMode) * uFade;
         alpha *= mix(0.06, 1.0, vFront) * vAlpha;
         gl_FragColor = vec4(col, clamp(alpha, 0.0, 1.0));
       }`,
@@ -996,7 +1006,9 @@ async function init() {
       if (vc < centers[k + 1]) return { i: k, j: k + 1, f: smooth(0.22, 0.78, (vc - centers[k]) / (centers[k + 1] - centers[k])) };
     }
     const last = centers.length - 1;
-    return { i: last, j: last, f: 0 };
+    // past the last scene on a phone: let the shape drift apart instead of sitting under the text
+    const tail = innerWidth <= 760 ? clamp((vc - centers[last]) / (innerHeight * 0.45), 0, 1) : 0;
+    return { i: last, j: last, f: 0, tail };
   }
 
   // ── LOOP ──
@@ -1026,7 +1038,8 @@ async function init() {
     const st = scrollState();
     const keyI = sections[st.i].dataset.shape, keyJ = sections[st.j].dataset.shape;
     const A = shapes[keyI].pos, B = shapes[keyJ].pos;
-    const key = st.i + ':' + st.j + ':' + st.f.toFixed(4);
+    const tail = st.tail || 0;
+    const key = st.i + ':' + st.j + ':' + st.f.toFixed(4) + ':' + tail.toFixed(3);
 
     if (ip < 1 || key !== lastKey) {
       lastKey = key;
@@ -1034,7 +1047,7 @@ async function init() {
       for (let i = 0; i < N; i++) {
         const i3 = i * 3;
         const k = morph ? ease(clamp(st.f * 1.5 - delay[i], 0, 1)) : 0;
-        const bump = Math.sin(Math.PI * k) * 1.2;
+        const bump = Math.sin(Math.PI * k) * 1.2 + ease(tail) * 3.2;
         let x = A[i3] + (B[i3] - A[i3]) * k + dir[i3] * bump;
         let y = A[i3 + 1] + (B[i3 + 1] - A[i3 + 1]) * k + dir[i3 + 1] * bump;
         let z = A[i3 + 2] + (B[i3 + 2] - A[i3 + 2]) * k + dir[i3 + 2] * bump;
@@ -1049,6 +1062,7 @@ async function init() {
       geo.attributes.position.needsUpdate = true;
     }
 
+    uniforms.uFade.value = 1 - ease(tail);
     const fe = ease(st.f), la = layouts[st.i], lb = layouts[st.j];
     group.position.set(lerp(la.x, lb.x, fe), lerp(la.y, lb.y, fe), 0);
     group.scale.setScalar(lerp(la.s, lb.s, fe));
@@ -1091,6 +1105,7 @@ async function init() {
     placeTag(tagCountry, countryPos, gw);
 
     renderer.render(scene, camera);
+    if (!root.classList.contains('cloud-ready')) root.classList.add('cloud-ready');
 
     // HUD
     if (ip < 1) hudPts.textContent = `scanning ${fmtN.format(Math.round(ease(ip) * N))} pts`;
