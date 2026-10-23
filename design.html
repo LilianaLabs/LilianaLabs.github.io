@@ -76,11 +76,14 @@ h2{font-family:var(--serif);font-weight:400;font-size:clamp(2.4rem,5vw,4.2rem);l
 
 .shots{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
 .shot{position:relative;display:block;overflow:hidden;border:1px solid var(--line);background:#fff;text-decoration:none}
-.shot img{width:100%;aspect-ratio:4/3;object-fit:cover;object-position:top;transition:transform 1s var(--ease)}
+.shot img{width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;object-position:top;transition:transform 1s var(--ease)}
 .shot:hover img{transform:scale(1.04)}
 .shot figcaption{display:flex;justify-content:space-between;gap:1rem;padding:.6rem .8rem;border-top:1px solid var(--line);background:var(--paper);color:var(--ink-2)}
 .shot:hover figcaption span:last-child{color:var(--signal)}
 .solo{max-width:720px}
+.shot.wide img{aspect-ratio:1400/1095}
+.inline{text-decoration:none;border-bottom:1px solid var(--signal)}
+.inline:hover{color:var(--signal)}
 .solo img{aspect-ratio:1/1}
 .note{margin-top:1rem;color:var(--ink-3)}
 
@@ -167,6 +170,28 @@ footer{max-width:1240px;margin:0 auto;padding:clamp(3rem,6vw,5rem) var(--g) 2rem
     <a class="shot solo rv" href="assets/kidsstore.jpg" target="_blank" rel="noopener"><figure><img src="assets/kidsstore.jpg" width="900" height="900" alt="Kids Store UZ logo with colourful illustrated letters" loading="lazy"><figcaption class="mono"><span data-i18n="d.f5">Logo — custom letters</span><span>↗</span></figcaption></figure></a>
   </article>
 
+  <!-- LILIANA.EXE CASE STUDY -->
+  <article class="project">
+    <div class="project-head">
+      <div class="rv">
+        <span class="num mono" data-i18n="d.n3">03 · web · case study</span>
+        <h2>Liliana<em>.exe</em></h2>
+      </div>
+      <div class="rows rv">
+        <div class="row"><span class="mono" data-i18n="d.project">Project</span><span data-i18n="d.p3">This portfolio — a site that behaves like a LiDAR scan</span></div>
+        <div class="row"><span class="mono" data-i18n="d.docs">Documented</span><span data-i18n="d.s3">Concept, 8-scene storyboard, typography, colour, components, motion, mobile testing — 12 modules prepared for Behance</span></div>
+        <div class="row"><span class="mono" data-i18n="d.live">Live</span><span><a href="index.html" class="inline">lilianalabs.github.io ↗</a></span></div>
+      </div>
+    </div>
+    <a class="shot wide rv" href="assets/liliana-exe/cover.jpg" target="_blank" rel="noopener"><figure><img src="assets/liliana-exe/cover.jpg" width="1400" height="1095" alt="Case study cover: Liliana.exe title and two phones showing the site" loading="lazy"><figcaption class="mono"><span data-i18n="d.f6">Cover — the site on a phone</span><span>↗</span></figcaption></figure></a>
+    <div class="shots" style="margin-top:1rem">
+      <a class="shot rv" href="assets/liliana-exe/storyboard.jpg" target="_blank" rel="noopener"><figure><img src="assets/liliana-exe/storyboard.jpg" width="1041" height="1400" alt="Storyboard: eight scenes of the site on phones" loading="lazy"><figcaption class="mono"><span data-i18n="d.f7">Storyboard — 8 scenes</span><span>↗</span></figcaption></figure></a>
+      <a class="shot rv" href="assets/liliana-exe/typography.jpg" target="_blank" rel="noopener"><figure><img src="assets/liliana-exe/typography.jpg" width="1400" height="1369" alt="Typography: four typefaces with their roles" loading="lazy"><figcaption class="mono"><span data-i18n="d.f8">Typography — 4 typefaces</span><span>↗</span></figcaption></figure></a>
+      <a class="shot rv" href="assets/liliana-exe/colour.jpg" target="_blank" rel="noopener"><figure><img src="assets/liliana-exe/colour.jpg" width="1400" height="963" alt="Colour palette: paper, ink and signal orange" loading="lazy"><figcaption class="mono"><span data-i18n="d.f9">Colour — paper, ink, signal</span><span>↗</span></figcaption></figure></a>
+      <a class="shot rv" href="assets/liliana-exe/components.jpg" target="_blank" rel="noopener"><figure><img src="assets/liliana-exe/components.jpg" width="1400" height="983" alt="UI components: brand mark, buttons, tags, terminal, map marker, language switch" loading="lazy"><figcaption class="mono"><span data-i18n="d.f10">Components — a small kit</span><span>↗</span></figcaption></figure></a>
+    </div>
+  </article>
+
   <!-- Nuts & Fruits business card goes here once the files are added -->
 </main>
 
@@ -196,6 +221,10 @@ footer{max-width:1240px;margin:0 auto;padding:clamp(3rem,6vw,5rem) var(--g) 2rem
     'd.f1': 'Логотип — вешалка и печать', 'd.f2': 'Палитра — шесть нюдовых тонов', 'd.f3': 'Упаковка — подарочная коробка', 'd.f4': 'Сайт — главная страница',
     'd.note': 'Фотографии внутри мокапов — иллюстративные.',
     'd.n2': '02 · логотип и леттеринг', 'd.c2': 'Детский магазин — страница в Instagram', 'd.s2': 'Логотип и авторский иллюстрированный леттеринг', 'd.f5': 'Логотип — авторские буквы',
+    'd.n3': '03 · веб · кейс', 'd.project': 'Проект', 'd.docs': 'Что внутри', 'd.live': 'Сайт',
+    'd.p3': 'Это портфолио — сайт, который ведёт себя как LiDAR-скан',
+    'd.s3': 'Концепция, раскадровка из 8 сцен, типографика, цвет, компоненты, движение, тест на телефоне — 12 модулей для Behance',
+    'd.f6': 'Обложка — сайт на телефоне', 'd.f7': 'Раскадровка — 8 сцен', 'd.f8': 'Типографика — 4 шрифта', 'd.f9': 'Цвет — бумага, чернила, сигнал', 'd.f10': 'Компоненты — небольшой набор',
     'd.ftag': 'сейчас · computer science и AI',
     'd.flead': 'Сейчас я изучаю Computer Science и экспериментирую с нейросетями — а взгляд дизайнера остаётся со мной.',
     'd.home': '← На главный сайт', 'd.write': 'Написать мне ↗',
@@ -217,7 +246,9 @@ footer{max-width:1240px;margin:0 auto;padding:clamp(3rem,6vw,5rem) var(--g) 2rem
   };
   document.querySelectorAll('[data-lang]').forEach(b => b.addEventListener('click', () => apply(b.dataset.lang)));
   let saved = null; try { saved = localStorage.getItem('lang'); } catch {}
-  if (saved === 'ru') apply('ru');
+  const urlLang = new URLSearchParams(location.search).get('lang');
+  if (urlLang === 'ru' || urlLang === 'en') apply(urlLang);
+  else if (saved === 'ru') apply('ru');
 })();
 const io = new IntersectionObserver(entries => entries.forEach(e => {
   if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
