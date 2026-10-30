@@ -112,7 +112,9 @@ main{position:relative;z-index:1}
 .panel{position:relative;width:min(500px,42vw)}
 .panel>*+*{margin-top:1.2rem}
 .tag{display:flex;align-items:center;gap:.6rem;color:var(--ink-2)}
-.tag::before{content:'';width:8px;height:8px;background:var(--signal);flex-shrink:0}
+.tag{align-items:flex-start}
+/* the square sits on the first line even when the label wraps */
+.tag::before{content:'';width:8px;height:8px;background:var(--signal);flex-shrink:0;margin-top:calc(.75em - 4px)}
 .h2{font-family:var(--serif);font-size:clamp(2.7rem,5.2vw,5rem);font-weight:400;letter-spacing:-.02em;line-height:.98}
 .h2 em{font-style:italic;letter-spacing:-.01em;color:var(--signal)}
 .lead{font-size:1.04rem;color:var(--ink-2);line-height:1.6;max-width:44ch}
@@ -167,14 +169,60 @@ main{position:relative;z-index:1}
 .layer p{font-size:.95rem;line-height:1.5}
 .layer p small{display:block;color:var(--ink-3);font-size:.82rem;margin-top:.15rem}
 
-/* work list */
-.works{list-style:none;border-top:1px solid var(--line)}
-.works li{display:grid;grid-template-columns:2.4rem 1fr;gap:.8rem;padding:.9rem 0;border-bottom:1px dashed var(--line);transition:padding .5s var(--ease)}
-.works li:hover{padding-left:.5rem}
-.works .n{color:var(--signal)}
-.works h3{font-size:1.08rem;font-weight:600;letter-spacing:-.02em;line-height:1.25}
-.works p{font-size:.88rem;color:var(--ink-2);line-height:1.5;margin-top:.2rem}
-.works .mono{color:var(--ink-3);margin-top:.35rem;display:block}
+/* work: a calm reading room, wider than the other panels */
+.work{display:block;padding:24vh var(--g) 18vh}
+.wk{max-width:1240px;margin:0 auto}
+/* keep clear of the section index on the right while it is shown */
+@media (min-width:1101px){.work{padding-right:calc(var(--g) + 8rem)}}
+.wk-h2{margin-top:1.1rem;max-width:16ch}
+.wk .lead{margin-top:1.2rem}
+.wk-group{margin-top:clamp(4.5rem,9vw,7.5rem)}
+.wk-head{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;border-top:1px solid var(--ink);padding-top:.75rem;margin-bottom:clamp(1.75rem,4vw,3rem)}
+.wk-head b{font:500 .75rem var(--mono);letter-spacing:.08em;text-transform:uppercase}
+.wk-head span{color:var(--ink-3)}
+/* selected: image 60 / text 40, alternating sides */
+.wk-project{display:grid;grid-template-columns:3fr 2fr;gap:clamp(1.75rem,4vw,4rem);align-items:center;padding:clamp(1.75rem,4vw,3rem) 0}
+.wk-project+.wk-project{border-top:1px solid var(--line)}
+.wk-project.flip{grid-template-columns:2fr 3fr}
+.wk-project.flip .wk-img{order:2}
+.wk-img{overflow:hidden;background:var(--paper-2);border:1px solid var(--line);aspect-ratio:4/3}
+.wk-img img{display:block;width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
+.wk-project:hover .wk-img img{transform:scale(1.02)}
+.wk-meta{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem .9rem;color:var(--ink-3)}
+.wk-num{color:var(--signal);font-weight:500}
+.stamp{display:inline-block;padding:.2rem .5rem;border:1.25px solid var(--ink);color:var(--ink);font:500 .62rem/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;transform:rotate(-1.5deg);white-space:nowrap}
+.wk-h3{font-family:var(--serif);font-weight:400;font-size:clamp(2.1rem,3.4vw,3.2rem);line-height:1;letter-spacing:-.02em;margin:1rem 0 .4rem}
+.wk-h3 em{font-style:italic;color:var(--signal)}
+.wk-sub{font-family:var(--serif);font-style:italic;font-size:1.25rem;color:var(--ink-3);margin-bottom:.6rem}
+.wk-hook{font-size:1.04rem;color:var(--ink-2);line-height:1.6;margin-top:.6rem;max-width:40ch}
+.wk .rows{margin-top:1.4rem}
+.wk .row{grid-template-columns:6.5rem 1fr;font-size:.94rem;line-height:1.5}
+.wk-actions{display:flex;align-items:center;flex-wrap:wrap;gap:.75rem 1.4rem;margin-top:1.5rem}
+/* lab: two-column list */
+.wk-lab{list-style:none;display:grid;grid-template-columns:1fr 1fr;column-gap:clamp(1.75rem,4vw,4rem)}
+.wk-lab li{display:grid;grid-template-columns:2.4rem 1fr;gap:.4rem .75rem;padding:1.1rem 0;border-bottom:1px dashed var(--line)}
+.wk-lab .n{color:var(--ink-3);padding-top:.25rem}
+.wk-lab .t{display:flex;justify-content:space-between;align-items:baseline;gap:.75rem}
+.wk-lab b{font-size:1.08rem;font-weight:600;letter-spacing:-.01em}
+.wk-lab p{grid-column:2;font-size:.94rem;color:var(--ink-2);line-height:1.5}
+/* in progress */
+.wk-hero{display:grid;grid-template-columns:1fr auto;gap:1.5rem;align-items:end;border:1px dashed var(--ink);padding:clamp(1.4rem,3vw,2.25rem)}
+.wk-hero .wk-h3{font-size:clamp(1.9rem,3vw,2.7rem);margin:.9rem 0 .5rem}
+.wk-hero p{color:var(--ink-2);max-width:52ch}
+.wk-live{display:inline-flex;align-items:center;gap:.6rem;color:var(--ink)}
+.wk-live i{width:8px;height:8px;border-radius:50%;background:var(--signal);position:relative}
+.wk-live i::after{content:'';position:absolute;inset:0;border-radius:50%;background:var(--signal);animation:wk-pulse 2.4s var(--ease) infinite}
+@keyframes wk-pulse{0%{transform:scale(1);opacity:.6}100%{transform:scale(3);opacity:0}}
+.wk-who{color:var(--ink-3);text-align:right}
+.wk-next{list-style:none;margin-top:.4rem}
+.wk-next li{display:grid;grid-template-columns:9rem 1fr;gap:.9rem;padding:.9rem 0;border-bottom:1px dashed var(--line);font-size:.96rem;color:var(--ink-2)}
+.wk-next .mono{color:var(--ink-3);padding-top:.15rem}
+.wk-next b{color:var(--ink);font-weight:600}
+.wk-more{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:clamp(3.5rem,7vw,5.5rem);padding-top:1.5rem;border-top:1px solid var(--line)}
+/* each block of the reading room fades in on its own */
+.js .wk-rv{opacity:0;transform:translateY(18px);transition:opacity 1s var(--ease),transform 1s var(--ease)}
+.js .wk-rv.in{opacity:1;transform:none}
+.shot .wk-rv{transition:none!important;opacity:1!important;transform:none!important}
 
 /* contact */
 .contact{min-height:120vh;align-items:flex-end;padding-bottom:calc(var(--g) + 3.2rem)}
@@ -202,11 +250,6 @@ main{position:relative;z-index:1}
 .index a:focus-visible span{opacity:1;transform:none}
 .lead.small{font-size:.9rem}
 .src{color:var(--ink-3)}
-.works .status,.status{display:inline-block;margin-top:0;margin-bottom:.35rem;padding:.12rem .45rem;border:1px solid var(--signal);color:var(--signal);font-size:.6rem}
-.next{border:1px dashed var(--line);padding:.8rem 1rem}
-.next-h{color:var(--signal)}
-.next ul{list-style:none;margin-top:.4rem;color:var(--ink-2);text-transform:none;letter-spacing:.02em;line-height:1.8}
-.next li::before{content:'→ ';color:var(--ink-3)}
 /* WebGL unavailable: keep the dotted character instead of an empty field */
 .no-webgl .grid{background-image:radial-gradient(var(--ink) 1px,transparent 1.5px);background-size:14px 14px;opacity:.14}
 
@@ -237,13 +280,28 @@ main{position:relative;z-index:1}
   .contact{padding:55vh var(--g) 2rem}
   .row{grid-template-columns:6.5rem 1fr}
   .stats .stat{padding:.75rem}
+  .work{padding:16vh var(--g) 10vh}
+  .wk-group{margin-top:3.5rem}
+  .wk-head{margin-bottom:.5rem}
+  .wk-project,.wk-project.flip{grid-template-columns:1fr;gap:1.4rem;padding:2rem 0}
+  .wk-project.flip .wk-img{order:0}
+  .wk-img{margin:0 calc(var(--g) * -1);border-left:0;border-right:0;aspect-ratio:16/10}
+  .wk-h3{margin-top:.75rem}
+  .wk .rows{margin-top:1rem}
+  .wk .row{grid-template-columns:5.5rem 1fr}
+  .wk-actions{margin-top:1.1rem}
+  .wk-lab{grid-template-columns:1fr}
+  .wk-lab li{padding:.9rem 0}
+  .wk-hero{grid-template-columns:1fr}
+  .wk-who{text-align:left}
+  .wk-next li{grid-template-columns:1fr;gap:.1rem}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition-duration:.01ms!important;transition-delay:0s!important}
 }
 
 /* Instrument Serif has no Cyrillic glyphs, so Russian headings use Cormorant Garamond */
-:lang(ru) h1,:lang(ru) h2,:lang(ru) .h2,:lang(ru) .hero-lead{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;letter-spacing:-.01em;font-size-adjust:0.5}
+:lang(ru) h1,:lang(ru) h2,:lang(ru) .h2,:lang(ru) .hero-lead,:lang(ru) .wk-h3,:lang(ru) .wk-sub{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;letter-spacing:-.01em;font-size-adjust:0.5}
 </style>
 <script>document.documentElement.classList.add('js')</script>
 <!-- no JavaScript (e.g. a phone's file preview): keep the dotted character instead of an empty page -->
@@ -386,27 +444,99 @@ main{position:relative;z-index:1}
     </div>
   </section>
 
-  <!-- 07 LAB -->
-  <section class="scene" id="work" data-shape="clusters" data-side="left" data-label="work">
-    <div class="panel">
-      <span class="tag mono rv" data-i18n="w.tag">[07] Liliana.exe · lab</span>
-      <h2 class="h2 rv" data-scramble data-i18n="w.h2"><em>Experiments,</em> not just a portfolio.</h2>
-      <p class="lead rv" data-i18n="w.lead">Not every experiment is a finished product. Not every project started from a blank page. But each one has a goal, my part in it, and something I learned.</p>
-      <ul class="works rv">
-        <li><span class="n mono">01</span><div><span class="status mono" data-i18n="st.ai">Built with AI</span><h3 data-i18n="w1.h">Liliana.exe — this site</h3><p data-i18n="w1.p">An interactive portfolio told through a point cloud. <b>My part:</b> concept, story, content and art direction; the code was written with AI assistance and refined through testing.</p><span class="mono">Three.js · WebGL</span></div></li>
-        <li><span class="n mono">02</span><div><span class="status mono" data-i18n="st.ai">Built with AI</span><h3 data-i18n="w2.h">Point-cloud self-portrait</h3><p data-i18n="w2.p">One photo → depth map → 16,000 points. <b>My part:</b> the photo, the visual idea and running the pipeline on my laptop's GPU; the script was written with AI assistance.</p><span class="mono">Depth Anything V2 · Python</span></div></li>
-        <li><span class="n mono">03</span><div><span class="status mono" data-i18n="st.guided">Guided experiment</span><h3 data-i18n="w3.h">First GPU experiment</h3><p data-i18n="w3.p">A small CNN on Fashion-MNIST in a guided notebook: 89% test accuracy after 3 epochs, 33 s on an Apple M4. <b>My part:</b> set up PyTorch locally, ran the notebook and experimented with it.</p><span class="mono">PyTorch · MPS</span></div></li>
-        <li><span class="n mono">04</span><div><span class="status mono" data-i18n="st.course">Coursework · AIL101</span><h3 data-i18n="w4.h">Prompt engineering portfolio</h3><p data-i18n="w4.p">Ten prompts across five patterns, before/after refinements, an English–Russian comparison and a classmate's prompt improved.</p></div></li>
-        <li><span class="n mono">05</span><div><span class="status mono" data-i18n="st.academic">Academic · group</span><h3 data-i18n="w5.h">Khorezm Solar project</h3><p data-i18n="w5.p">A group study of solar energy as a climate solution, from an environmental NGO's perspective.</p></div></li>
-        <li><span class="n mono">06</span><div><span class="status mono" data-i18n="st.client">Client concept</span><h3 data-i18n="w6.h">Paprika — a photographer's website</h3><p data-i18n="w6.p">A website concept for family photographer Kristina Romanova: prints on a table turn into a film. <b>My part:</b> concept, story, art direction, UX and phone testing; the code was written with AI assistance. <a href="design.html#paprika">Case study →</a></p><span class="mono">HTML · CSS · JavaScript</span></div></li>
-      </ul>
-      <div class="next rv">
-        <span class="mono next-h" data-i18n="next.h">Next</span>
-        <ul class="mono">
-          <li data-i18n="next.1">AI-Assisted Game Development Workshop · Nov 5–10, 2026 · upcoming</li>
-          <li data-i18n="next.2">Java learning project · planned</li>
-          <li data-i18n="next.3">Python data analysis · planned</li>
+  <!-- 07 LAB: a calm reading room; the point cloud fades out while the projects are on screen -->
+  <section class="scene work" id="work" data-shape="clusters" data-side="left" data-label="work">
+    <div class="wk">
+      <header class="wk-rv">
+        <span class="tag mono" data-i18n="w.tag">[07] Liliana.exe · lab</span>
+        <h2 class="h2 wk-h2" data-scramble data-i18n="w.h2"><em>Experiments,</em> not just a portfolio.</h2>
+        <p class="lead" data-i18n="w.lead">Not every experiment is a finished product. Not every project started from a blank page. But each one has a goal, my part in it, and something I learned.</p>
+      </header>
+
+      <div class="wk-group">
+        <div class="wk-head wk-rv"><b data-i18n="wk.sel">Selected · 3</b><span class="mono" data-i18n="wk.selS">AI · a client · this site</span></div>
+
+        <article class="wk-project wk-rv">
+          <div class="wk-img"><img src="assets/work/nvidia.jpg" width="1000" height="750" alt="A cube and a sphere as a LiDAR point cloud" data-i18n-alt="wk.nv.alt" loading="lazy"></div>
+          <div>
+            <div class="wk-meta mono"><span class="wk-num">01</span><span data-i18n="wk.nv.m">Course project · Feb 2026</span><span class="stamp" data-i18n="wk.nv.st">Passed 10/10</span></div>
+            <h3 class="wk-h3" data-i18n="wk.nv.h">Seeing LiDAR <em>through</em> a camera</h3>
+            <p class="wk-hook" data-i18n="wk.nv.p">The final assessment of NVIDIA's course <i>Building AI Agents with Multimodal Models</i>.</p>
+            <div class="rows">
+              <div class="row"><span class="mono" data-i18n="wk.part">My part</span><span data-i18n="wk.nv.part">Completed the contrastive model, its loss and the projector in a guided notebook, in NVIDIA's GPU lab with their data and starter code.</span></div>
+              <div class="row"><span class="mono" data-i18n="wk.learned">Learned</span><span data-i18n="wk.nv.learned">How contrastive learning aligns two sensors, and how a projector bridges their spaces.</span></div>
+            </div>
+            <div class="wk-actions">
+              <a class="btn btn-sig" href="https://learn.nvidia.com/certificates?id=fL-EdYozTkat8q9Xl_9iTg" target="_blank" rel="noopener" data-i18n="feat.verify">Verify certificate ↗</a>
+              <a class="link" href="#featured" data-i18n="wk.nv.scan">See the scan ↑</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="wk-project flip wk-rv">
+          <div class="wk-img"><img src="assets/work/paprika.jpg" width="1200" height="900" alt="Paprika website concept on a laptop and a phone" data-i18n-alt="wk.pp.alt" loading="lazy"></div>
+          <div>
+            <div class="wk-meta mono"><span class="wk-num">02</span><span data-i18n="wk.pp.m">Website · 2026</span><span class="stamp" data-i18n="wk.pp.st">Client concept</span></div>
+            <h3 class="wk-h3" data-i18n="wk.pp.h">Paprika — a <em>photographer's</em> website</h3>
+            <p class="wk-hook" data-i18n="wk.pp.p">For family photographer Kristina Romanova: prints on a table turn into a film.</p>
+            <div class="rows">
+              <div class="row"><span class="mono" data-i18n="wk.part">My part</span><span data-i18n="wk.pp.part">Concept, art direction, UX, text structure and phone testing; the code was written with AI assistance.</span></div>
+              <div class="row"><span class="mono" data-i18n="wk.status">Status</span><span data-i18n="wk.pp.status">Concept approved by the client · launch after the original photos arrive.</span></div>
+            </div>
+            <div class="wk-actions">
+              <a class="btn btn-sig" href="design.html#paprika" data-i18n="wk.case">Case study ↗</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="wk-project wk-rv">
+          <div class="wk-img"><img src="assets/work/liliana.jpg" width="1200" height="900" alt="Liliana.exe on two phones" data-i18n-alt="wk.le.alt" loading="lazy"></div>
+          <div>
+            <div class="wk-meta mono"><span class="wk-num">03</span><span data-i18n="wk.le.m">Personal website · 2026</span><span class="stamp" data-i18n="wk.le.st">Built with AI</span></div>
+            <h3 class="wk-h3">Liliana<em>.exe</em></h3>
+            <p class="wk-sub" data-i18n="wk.le.sub">— you're looking at it</p>
+            <p class="wk-hook" data-i18n="wk.le.p">A portfolio that behaves like a LiDAR sensor: 16,000 points re-form into each part of my story.</p>
+            <div class="rows">
+              <div class="row"><span class="mono" data-i18n="wk.part">My part</span><span data-i18n="wk.le.part">Concept, story, all copy in English and Russian, art direction, testing on real phones; the code was written with AI assistance.</span></div>
+              <div class="row"><span class="mono" data-i18n="wk.learned">Learned</span><span data-i18n="wk.le.learned">Real phones find what a laptop hides: blob-like points, foggy panels, a stalled CDN, a font with no Cyrillic.</span></div>
+            </div>
+            <div class="wk-actions">
+              <a class="btn btn-sig" href="design.html#liliana-exe" data-i18n="wk.case">Case study ↗</a>
+              <a class="link" href="#hello" data-i18n="wk.le.back">Back to the scan ↑</a>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="wk-group wk-rv">
+        <div class="wk-head"><b data-i18n="wk.lab">Lab · 4</b><span class="mono" data-i18n="wk.labS">smaller experiments</span></div>
+        <ul class="wk-lab">
+          <li><span class="n mono">01</span><div class="t"><b data-i18n="w2.h">Point-cloud self-portrait</b><span class="stamp" data-i18n="st.ai">Built with AI</span></div><p data-i18n="wk.l1">One photo → depth map → 16,000 points, with Depth Anything V2. The script was written with AI assistance.</p></li>
+          <li><span class="n mono">02</span><div class="t"><b data-i18n="w3.h">First GPU experiment</b><span class="stamp" data-i18n="st.guided">Guided</span></div><p data-i18n="wk.l2">A small CNN on Fashion-MNIST in a guided notebook: 89% after 3 epochs, 33 s on an Apple M4.</p></li>
+          <li><span class="n mono">03</span><div class="t"><b data-i18n="w4.h">Prompt engineering portfolio</b><span class="stamp" data-i18n="st.course">Coursework</span></div><p data-i18n="wk.l3">Ten prompts, five patterns, before/after refinements and an English–Russian comparison.</p></li>
+          <li><span class="n mono">04</span><div class="t"><b data-i18n="w5.h">Khorezm Solar project</b><span class="stamp" data-i18n="st.academic">Academic</span></div><p data-i18n="w5.p">A group study of solar energy as a climate solution, from an environmental NGO's perspective.</p></li>
         </ul>
+      </div>
+
+      <div class="wk-group wk-rv">
+        <div class="wk-head"><b data-i18n="wk.wip">In progress</b><span class="mono" data-i18n="wk.wipS">what I'm building now</span></div>
+        <div class="wk-hero">
+          <div>
+            <span class="wk-live mono"><i></i><span data-i18n="wk.cc.m">In progress · my code</span></span>
+            <h3 class="wk-h3">Liliana.exe <em>Command</em> Center</h3>
+            <p data-i18n="wk.cc.p">A Java console app that grows into my personal OS: roadmap, learning hub, daily focus.</p>
+          </div>
+          <span class="wk-who mono" data-i18n="wk.cc.who">I write the code<br>AI reviews it</span>
+        </div>
+        <ul class="wk-next">
+          <li><span class="mono" data-i18n="wk.ws.d">Nov 5–10, 2026</span><span data-i18n="wk.ws.p"><b>AI-Assisted Game Development Workshop</b> — a game built during the workshop, documented here afterwards.</span></li>
+          <li><span class="mono" data-i18n="next.h">Next</span><span data-i18n="wk.py">Python + SQL — data analysis, after Java.</span></li>
+        </ul>
+      </div>
+
+      <div class="wk-more wk-rv">
+        <a class="btn" href="design.html" data-i18n="wk.arch">Design archive ↗</a>
+        <a class="btn" href="https://t.me/Leeloosh" target="_blank" rel="noopener" data-i18n="wk.tg">Lab notes on Telegram ↗</a>
       </div>
     </div>
   </section>
@@ -486,23 +616,47 @@ PING liliana (Tashkent): 56 bytes</pre>
     'w.tag': '[07] Liliana.exe · лаборатория',
     'w.h2': '<em>Эксперименты,</em> а не просто портфолио.',
     'w.lead': 'Не каждый эксперимент — готовый продукт. Не каждый проект создан с нуля. Но у каждого есть задача, мой вклад и то, чему я научилась.',
-    'st.ai': 'Сделано с AI', 'st.guided': 'Учебный эксперимент', 'st.course': 'Курсовая · AIL101', 'st.academic': 'Учебный · групповой', 'st.client': 'Концепт для клиента',
-    'w6.h': 'Paprika — сайт фотографа',
-    'w6.p': 'Концепт сайта для семейного фотографа Кристины Романовой: отпечатки на столе превращаются в кино. <b>Мой вклад:</b> концепция, история, арт-дирекшн, UX и тест на телефоне; код написан с помощью AI. <a href="design.html#paprika">Кейс →</a>',
-    'w1.h': 'Liliana.exe — этот сайт',
-    'w1.p': 'Интерактивное портфолио, рассказанное через облако точек. <b>Мой вклад:</b> концепция, история, тексты и арт-дирекшн; код написан с помощью AI и доработан через тестирование.',
+    'st.ai': 'Сделано с AI', 'st.guided': 'Учебный', 'st.course': 'Курсовая', 'st.academic': 'Групповой',
     'w2.h': 'Портрет из облака точек',
-    'w2.p': 'Одно фото → карта глубины → 16 000 точек. <b>Мой вклад:</b> фото, визуальная идея и запуск пайплайна на GPU ноутбука; скрипт написан с помощью AI.',
     'w3.h': 'Первый эксперимент на GPU',
-    'w3.p': 'Небольшая CNN на Fashion-MNIST в учебном ноутбуке: 89% точности после 3 эпох, 33 секунды на Apple M4. <b>Мой вклад:</b> настроила PyTorch у себя, запустила ноутбук и поэкспериментировала с ним.',
     'w4.h': 'Портфолио промптов',
-    'w4.p': 'Десять промптов в пяти техниках, разбор «до и после», сравнение объяснений на английском и русском и улучшенный промпт однокурсника.',
-    'w5.h': 'Проект «Солнечная энергия в Хорезме»',
+    'w5.h': 'Солнечная энергия в Хорезме',
     'w5.p': 'Групповое исследование солнечной энергетики как ответа на изменение климата — с позиции экологической НКО.',
     'next.h': 'Дальше',
-    'next.1': 'Воркшоп по разработке игр с AI · 5–10 ноября 2026 · скоро',
-    'next.2': 'Учебный проект на Java · в планах',
-    'next.3': 'Анализ данных на Python · в планах',
+    'wk.sel': 'Избранное · 3', 'wk.selS': 'AI · клиент · этот сайт',
+    'wk.part': 'Мой вклад', 'wk.learned': 'Научилась', 'wk.status': 'Статус', 'wk.case': 'Кейс ↗',
+    'wk.nv.alt': 'Куб и сфера в виде облака точек LiDAR',
+    'wk.nv.m': 'Учебный проект · фев 2026', 'wk.nv.st': 'Сдано на 10/10',
+    'wk.nv.h': 'Увидеть LiDAR <em>через</em> камеру',
+    'wk.nv.p': 'Итоговое задание курса NVIDIA <i>Building AI Agents with Multimodal Models</i>.',
+    'wk.nv.part': 'Дописала контрастную модель, её функцию потерь и проектор в учебном ноутбуке — в GPU-лаборатории NVIDIA, на их данных и стартовом коде.',
+    'wk.nv.learned': 'Как контрастное обучение связывает два сенсора и как проектор соединяет их пространства.',
+    'wk.nv.scan': 'Смотреть скан ↑',
+    'wk.pp.alt': 'Концепт сайта Paprika на ноутбуке и телефоне',
+    'wk.pp.m': 'Сайт · 2026', 'wk.pp.st': 'Концепт для клиента',
+    'wk.pp.h': 'Paprika — сайт <em>фотографа</em>',
+    'wk.pp.p': 'Для семейного фотографа Кристины Романовой: отпечатки на столе превращаются в кино.',
+    'wk.pp.part': 'Концепция, арт-дирекшн, UX, структура текстов и тест на телефоне; код написан с помощью AI.',
+    'wk.pp.status': 'Концепт одобрен клиентом · запуск после получения оригиналов фото.',
+    'wk.le.alt': 'Liliana.exe на двух телефонах',
+    'wk.le.m': 'Личный сайт · 2026', 'wk.le.st': 'Сделано с AI',
+    'wk.le.sub': '— вы сейчас на нём',
+    'wk.le.p': 'Портфолио, которое ведёт себя как LiDAR-датчик: 16 000 точек перестраиваются под каждую часть моей истории.',
+    'wk.le.part': 'Концепция, история, все тексты на английском и русском, арт-дирекшн, тест на реальных телефонах; код написан с помощью AI.',
+    'wk.le.learned': 'Реальный телефон показывает то, что прячет ноутбук: точки-кляксы, мутные панели, зависший CDN, шрифт без кириллицы.',
+    'wk.le.back': 'Назад к скану ↑',
+    'wk.lab': 'Лаборатория · 4', 'wk.labS': 'небольшие эксперименты',
+    'wk.l1': 'Одно фото → карта глубины → 16 000 точек, на Depth Anything V2. Скрипт написан с помощью AI.',
+    'wk.l2': 'Небольшая CNN на Fashion-MNIST в учебном ноутбуке: 89% после 3 эпох, 33 секунды на Apple M4.',
+    'wk.l3': 'Десять промптов, пять техник, разбор «до и после» и сравнение английского и русского.',
+    'wk.wip': 'В работе', 'wk.wipS': 'что я делаю сейчас',
+    'wk.cc.m': 'В работе · мой код',
+    'wk.cc.p': 'Консольное приложение на Java, которое растёт в мою личную ОС: роадмап, учебный хаб, фокус дня.',
+    'wk.cc.who': 'Код пишу я<br>AI делает ревью',
+    'wk.ws.d': '5–10 ноября 2026',
+    'wk.ws.p': '<b>Воркшоп по разработке игр с AI</b> — игру, сделанную на воркшопе, покажу здесь после.',
+    'wk.py': 'Python + SQL — анализ данных, после Java.',
+    'wk.arch': 'Архив дизайна ↗', 'wk.tg': 'Заметки в Telegram ↗',
     'c.tag': '[08] контакты · пингуй — открыта к стажировкам',
     'c.ping': 'Отправить пинг ⟶', 'c.write': 'Написать мне ↗',
   };
@@ -528,6 +682,11 @@ PING liliana (Tashkent): 56 bytes</pre>
         if (el._en === undefined) el._en = el.innerHTML;
         const ru = RU[el.dataset.i18n];
         el.innerHTML = this.lang === 'ru' && ru != null ? ru : el._en;
+      });
+      document.querySelectorAll('[data-i18n-alt]').forEach(el => {
+        if (el._enAlt === undefined) el._enAlt = el.alt;
+        const ru = RU[el.dataset.i18nAlt];
+        el.alt = this.lang === 'ru' && ru ? ru : el._enAlt;
       });
       document.querySelectorAll('[data-i18n-aria]').forEach(el => {
         if (el._enAria === undefined) el._enAria = el.getAttribute('aria-label');
@@ -612,6 +771,14 @@ const io = new IntersectionObserver(entries => entries.forEach(e => {
   io.unobserve(e.target);
 }), { threshold: 0.2 });
 $$('.panel').forEach(p => io.observe(p));
+// the work section is taller than a screen, so each of its blocks reveals on its own
+const ioWork = new IntersectionObserver(entries => entries.forEach(e => {
+  if (!e.isIntersecting) return;
+  e.target.classList.add('in');
+  $$('[data-scramble]', e.target).forEach(scramble);
+  ioWork.unobserve(e.target);
+}), { threshold: 0.12 });
+$$('.wk-rv').forEach(el => ioWork.observe(el));
 
 // ── COPY EMAIL ──
 const copyBtn = $('#copyBtn');
@@ -1012,6 +1179,13 @@ async function init() {
       else if (narrow) { y = visH * 0.2; ah = visH * 0.42; if (sec.dataset.shape === 'hi') { y = visH * 0.3; ah = visH * 0.26; } }
       else { y = visH * 0.1; }
       if (sec.dataset.shape === 'name') aw *= 0.85; // leave air around the name on wide screens
+      // contact: fit PING between the top HUD and the contact panel's black line, with air above the line
+      if (sec.dataset.shape === 'hi' && !narrow) {
+        const maxScroll = root.scrollHeight - innerHeight;
+        const line = sec.querySelector('.panel').getBoundingClientRect().top + scrollY - maxScroll;
+        const top = 72, bottom = line - 40;
+        if (bottom - top > VH * 0.2) { y = (VH / 2 - (top + bottom) / 2) * visH / VH; ah = (bottom - top) * visH / VH; }
+      }
       return { x, y, s: Math.min(1.3, aw / sh.w, ah / sh.h) };
     });
     centers = sections.map(s => { const r = s.getBoundingClientRect(); return r.top + scrollY + r.height / 2; });
@@ -1019,6 +1193,7 @@ async function init() {
   layout();
   addEventListener('resize', layout);
   addEventListener('load', layout);
+  addEventListener('langchange', layout); // Russian copy changes panel heights
 
   const shotIdx = SHOT ? sections.findIndex(s => s.id === SHOT) : -1;
   function scrollState() {
@@ -1038,6 +1213,13 @@ async function init() {
 
   // ── LOOP ──
   const tagCity = $('#tagCity'), tagCountry = $('#tagCountry');
+  // the work section is a reading room: the cloud fades out while its projects fill the screen
+  const workSec = $('#work');
+  function roomFade() {
+    const r = workSec.getBoundingClientRect();
+    // the cloud comes back only once the section's last lines have scrolled up past where PING forms
+    return smooth(innerHeight * 0.85, innerHeight * 0.25, r.top) * smooth(innerHeight * 0.05, innerHeight * 0.4, r.bottom);
+  }
   const cityPos = sph(TASHKENT[0], TASHKENT[1], GR * 1.012), countryPos = sph(36.2, 64.4, GR * 1.01);
   const tmp = new THREE.Vector3();
   function placeTag(el, v, w) {
@@ -1051,7 +1233,7 @@ async function init() {
   const fmtN = new Intl.NumberFormat('en-US');
   const introStart = SHOT ? -1e9 : performance.now();
   if (SHOT) {
-    $$('.panel').forEach(p => p.classList.add('in'));
+    $$('.panel, .wk-rv').forEach(p => p.classList.add('in'));
     const sec = document.getElementById(SHOT);
     // phones: the scene's first glance (shape whole, text rising below); desktop: the scene's centre
     if (sec) { const r = sec.getBoundingClientRect(), top = r.top + scrollY; scrollTo(0, innerWidth <= 760 ? top + (SHOT === 'contact' ? innerHeight * 0.1 : 0) : top + r.height / 2 - innerHeight / 2); }
@@ -1093,7 +1275,7 @@ async function init() {
       geo.attributes.position.needsUpdate = true;
     }
 
-    uniforms.uFade.value = 1 - ease(tail);
+    uniforms.uFade.value = (1 - ease(tail)) * (1 - roomFade());
     const fe = ease(st.f), la = layouts[st.i], lb = layouts[st.j];
     group.position.set(lerp(la.x, lb.x, fe), lerp(la.y, lb.y, fe), 0);
     group.scale.setScalar(lerp(la.s, lb.s, fe));
