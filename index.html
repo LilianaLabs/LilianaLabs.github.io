@@ -71,6 +71,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .geo-city > span{position:absolute;left:34px;top:0;transform:translateY(-50%);white-space:nowrap;color:var(--ink);font-weight:500;background:var(--paper);padding:.25rem .45rem;border:1px solid var(--ink)}
 .geo-city > span::before{content:'';position:absolute;left:-26px;top:50%;width:25px;height:1px;background:var(--ink)}
 .geo-city small{display:block;font-size:.6rem;color:var(--ink-3)}
+.geo-country{display:none}
 .geo-country span{display:block;transform:translate(-50%,-50%);font-size:.72rem;font-weight:500;letter-spacing:.32em;color:var(--ink);white-space:nowrap;text-shadow:0 0 4px var(--paper),0 0 8px var(--paper),0 0 12px var(--paper)}
 
 /* ── HUD ── */
@@ -132,6 +133,7 @@ main{position:relative;z-index:1}
 .hero .panel>*+*{margin-top:0}
 .hero-lead{font-family:var(--serif);font-size:clamp(1.9rem,3.4vw,3.3rem);font-weight:400;letter-spacing:-.02em;line-height:1.02;max-width:20ch}
 .hero-lead em{font-style:italic;color:var(--signal)}
+.hero-path{margin-top:1rem;color:var(--ink);font-size:.78rem;line-height:1.6;max-width:46ch}
 .hero-side{display:flex;flex-direction:column;align-items:flex-end;gap:1rem;text-align:right}
 .hint{color:var(--ink-3)}
 
@@ -231,6 +233,7 @@ main{position:relative;z-index:1}
 .mail{display:inline-block;font-size:clamp(1.3rem,3vw,2.6rem);font-weight:500;letter-spacing:-.04em;text-decoration:none;border-bottom:2px solid var(--signal);word-break:break-all;line-height:1.15}
 .mail:hover{color:var(--signal)}
 .contact-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem}
+.cv-note{margin-top:.9rem;font-size:.86rem;color:var(--ink-2);max-width:40ch}
 .socials{list-style:none;border-top:1px solid var(--line)}
 .socials a{display:flex;justify-content:space-between;padding:.7rem 0;border-bottom:1px dashed var(--line);text-decoration:none;font-size:1.05rem;transition:color .3s,padding .5s var(--ease)}
 .socials a:hover{color:var(--signal);padding-left:.4rem}
@@ -249,6 +252,8 @@ main{position:relative;z-index:1}
 :focus-visible{outline:2px solid var(--signal);outline-offset:3px}
 .index a:focus-visible span{opacity:1;transform:none}
 .lead.small{font-size:.9rem}
+/* key phrases: a soft signal marker, used in a handful of places only */
+b.key{color:var(--ink);font-weight:500;background:linear-gradient(transparent 60%,rgba(255,61,0,.24) 0);padding:0 .08em}
 .src{color:var(--ink-3)}
 /* WebGL unavailable: keep the dotted character instead of an empty field */
 .no-webgl .grid{background-image:radial-gradient(var(--ink) 1px,transparent 1.5px);background-size:14px 14px;opacity:.14}
@@ -312,8 +317,8 @@ main{position:relative;z-index:1}
 <canvas id="cloud" aria-hidden="true"></canvas>
 <div class="grid" aria-hidden="true"></div>
 <div class="loading mono" aria-hidden="true"><span data-i18n="ui.loading">scanning</span><span class="caret">_</span></div>
-<div class="geo-tag geo-city" id="tagCity" aria-hidden="true"><i></i><span class="mono"><span data-i18n="geo.city">Tashkent</span><small>41.31°N 69.24°E</small></span></div>
-<div class="geo-tag geo-country" id="tagCountry" aria-hidden="true"><span class="mono" data-i18n="geo.country">Uzbekistan</span></div>
+<div class="geo-tag geo-city" id="tagCity" aria-hidden="true"><i></i><span class="mono"><span data-i18n="geo.city">Tashkent</span><small data-i18n="geo.country">Uzbekistan</small><small>41.31°N 69.24°E</small></span></div>
+<div class="geo-tag geo-country" id="tagCountry" aria-hidden="true"><span class="mono">Uzbekistan</span></div>
 
 <!-- HUD -->
 <header class="hud hud-top mono">
@@ -353,9 +358,12 @@ main{position:relative;z-index:1}
   <section class="scene hero" id="hello" data-shape="name" data-side="center" data-label="hello">
     <h1 class="sr-only" data-i18n="hero.h1">Liliana Suleymanova — Computer Science student in Tashkent</h1>
     <div class="panel">
-      <p class="hero-lead rv" data-i18n="hero.lead">CS student in Tashkent, learning how machines <em>see</em> the world.</p>
+      <div class="rv">
+        <p class="hero-lead" data-i18n="hero.lead">CS student in Tashkent, learning how machines <em>see</em> the world.</p>
+        <p class="hero-path mono" data-i18n="hero.path">My path: data analysis → AI. Java now as my foundation, Python and SQL next.</p>
+      </div>
       <div class="hero-side rv">
-        <span class="mono hint" data-i18n="hero.hint">move the cursor — touch the scan</span>
+                <span class="mono hint" data-i18n="hero.hint">move the cursor — touch the scan</span>
         <a href="#me" class="btn btn-sig" data-i18n="hero.cta">↓ Scroll to re-project</a>
       </div>
     </div>
@@ -366,11 +374,11 @@ main{position:relative;z-index:1}
     <div class="panel">
       <span class="tag mono rv" data-i18n="me.tag">[02] subject · depth from a single photo</span>
       <h2 class="h2 rv" data-scramble data-i18n="me.h2">Hi, I'm <em>Liliana.</em></h2>
-      <p class="lead rv" data-i18n="me.lead">My path into Computer Science has taken a few turns — from telecommunications to aviation, from web design to software development. Today I'm a second-year student at AUT, building my foundations in Java and exploring AI-assisted development, computer vision and interactive systems.</p>
+      <p class="lead rv" data-i18n="me.lead">My path into Computer Science has taken a few turns — from telecommunications to aviation to web design. As a designer, I wanted to understand what happens behind the things I made, and that's what brought me to code. Today I'm <b class="key">building my foundations in Java</b> and learning how computer vision and AI assistants work.</p>
       <p class="lead small rv" data-i18n="me.note">This portrait isn't a photo: a neural network, <b>Depth Anything V2</b>, estimated depth from a single picture, and an AI-assisted script turned it into 16,000 points. Move the cursor or swipe to turn it.</p>
       <div class="rows rv">
-        <div class="row"><span class="mono" data-i18n="me.bgK">Background</span><span data-i18n="me.bgV">Telecom → aviation → <a class="inline-link" href="design.html">brand &amp; web design ↗</a></span></div>
-        <div class="row"><span class="mono" data-i18n="me.langK">Languages</span><span data-i18n="me.langV">Russian · Uzbek · English</span></div>
+        <div class="row"><span class="mono" data-i18n="me.bgK">Design</span><span data-i18n="me.bgV"><a class="inline-link" href="design.html">Brand &amp; web design archive ↗</a></span></div>
+        <div class="row"><span class="mono" data-i18n="me.langK">Languages</span><span data-i18n="me.langV">Russian (native) · English (B2) · Uzbek (basic)</span></div>
       </div>
     </div>
   </section>
@@ -378,13 +386,13 @@ main{position:relative;z-index:1}
   <!-- 03 ORIGIN -->
   <section class="scene" id="origin" data-shape="globe" data-side="left" data-label="origin">
     <div class="panel">
-      <span class="tag mono rv" data-i18n="origin.tag">[03] origin · 41.31°N 69.24°E</span>
-      <h2 class="h2 rv" data-scramble data-i18n="origin.h2">Based in <em>Tashkent.</em></h2>
-      <p class="lead rv" data-i18n="origin.lead">Second-year Computer Science student at the American University of Technology (powered by ASU). I'm looking for a first internship in IT — writing code, working with data and SQL, or helping on an AI project — where I can keep learning from a team.</p>
+      <span class="tag mono rv" data-i18n="origin.tag">[03] status · 41.31°N 69.24°E</span>
+      <h2 class="h2 rv" data-scramble data-i18n="origin.h2">Open to <em>internships.</em></h2>
+      <p class="lead rv" data-i18n="origin.lead">I'm a second-year Computer Science student at the <b class="key">American University of Technology</b>, powered by <b class="key">Arizona State University</b>. I'm looking for a first internship in data analysis or on an AI team — working with data, SQL and Python, and learning from the people around me.</p>
       <div class="rows rv">
-        <div class="row"><span class="mono" data-i18n="origin.k1">Studying</span><span data-i18n="origin.v1">B.S. Computer Science · 2nd year</span></div>
-        <div class="row"><span class="mono" data-i18n="origin.k2">Looking for</span><span data-i18n="origin.v2">Internships in software development, data analysis &amp; SQL, or AI projects</span></div>
-        <div class="row"><span class="mono" data-i18n="origin.k3">Also open to</span><span data-i18n="origin.v3">Any good IT project where a creative eye and a non-linear background help — hackathons and student teams too</span></div>
+        <div class="row"><span class="mono" data-i18n="origin.k3">Also open to</span><span data-i18n="origin.v3">Software development internships, hackathons and student teams</span></div>
+        <div class="row"><span class="mono" data-i18n="origin.k5">Graduation</span><span>2029</span></div>
+        <div class="row"><span class="mono" data-i18n="origin.k6">Schedule</span><span data-i18n="origin.v6">Flexible — let's discuss</span></div>
         <div class="row"><span class="mono" data-i18n="origin.k4">Where</span><span data-i18n="origin.v4">Tashkent · remote</span></div>
       </div>
     </div>
@@ -395,7 +403,7 @@ main{position:relative;z-index:1}
     <div class="panel">
       <span class="tag mono rv" data-i18n="feat.tag">[04] featured · NVIDIA DLI course project</span>
       <h2 class="h2 rv" data-scramble data-i18n="feat.h2">Seeing LiDAR <em>through</em> a camera.</h2>
-      <p class="lead rv" data-i18n="feat.lead">The final assessment of NVIDIA's course <i>Building AI Agents with Multimodal Models</i>. A LiDAR model could tell <b>cubes</b> from <b>spheres</b>, but LiDAR sensors are rare. In NVIDIA's GPU lab, with their data and starter code, I completed a CLIP-style contrastive model and a projector that maps camera embeddings into the LiDAR model's space — so the same classifier works from a camera.</p>
+      <p class="lead rv" data-i18n="feat.lead">The final assessment of NVIDIA's course <i>Building AI Agents with Multimodal Models</i>. A LiDAR model could tell <b>cubes</b> from <b>spheres</b>, but LiDAR sensors are rare. In NVIDIA's GPU lab, with their data and starter code, I completed a CLIP-style contrastive model and a projector that maps camera embeddings into the LiDAR model's space — so <b class="key">the same classifier works from a camera</b>.</p>
       <div class="rows rv">
         <div class="row"><span class="mono" data-i18n="feat.k1">My part</span><span data-i18n="feat.v1">Completed the contrastive model, its loss and the projector in a guided notebook</span></div>
         <div class="row"><span class="mono" data-i18n="feat.k2">Learned</span><span data-i18n="feat.v2">How contrastive learning aligns two sensors, and how a projector bridges their spaces</span></div>
@@ -421,9 +429,9 @@ main{position:relative;z-index:1}
       <span class="tag mono rv" data-i18n="stack.tag">[05] stack · 4 layers</span>
       <h2 class="h2 rv" data-scramble data-i18n="stack.h2">My stack, <em>as</em> a neural net.</h2>
       <div class="layers rv">
-        <div class="layer"><span class="mono"><b>L1</b><span data-i18n="stack.in">input</span></span><p data-i18n="stack.l1">Java, Python<small>Java is my current focus: OOP, classes, arrays · Python basics</small></p></div>
+        <div class="layer"><span class="mono"><b>L1</b><span data-i18n="stack.in">input</span></span><p data-i18n="stack.l1">Java (basic)<small>my current course: OOP, classes, arrays · in IntelliJ IDEA</small></p></div>
         <div class="layer"><span class="mono"><b>L2</b><span data-i18n="stack.hid">hidden</span></span><p data-i18n="stack.l2">Computer vision &amp; multimodal AI<small>introduced through NVIDIA DLI: CNNs, contrastive learning, PyTorch</small></p></div>
-        <div class="layer"><span class="mono"><b>L3</b><span data-i18n="stack.hid">hidden</span></span><p data-i18n="stack.l3">Figma, Photoshop, HTML &amp; CSS, Git, Jupyter<small>a design background, plus AI-assisted development</small></p></div>
+        <div class="layer"><span class="mono"><b>L3</b><span data-i18n="stack.hid">hidden</span></span><p data-i18n="stack.l3">AI tools, Git, Figma, Photoshop<small>prompting, checking and testing what AI builds · version control with Git · design tools from my previous work</small></p></div>
         <div class="layer"><span class="mono"><b>L4</b><span data-i18n="stack.out">output</span></span><p data-i18n="stack.l4">Next: Python → data analysis &amp; SQL<small>on the way toward ML and computer vision</small></p></div>
       </div>
     </div>
@@ -433,7 +441,7 @@ main{position:relative;z-index:1}
   <section class="scene" id="method" data-shape="braces" data-side="right" data-label="method">
     <div class="panel">
       <span class="tag mono rv" data-i18n="m.tag">[06] method · how I use AI</span>
-      <h2 class="h2 rv" data-scramble data-i18n="m.h2">How I work <em>with</em> AI.</h2>
+      <h2 class="h2 rv" data-i18n="m.h2">How I work <em>with</em> AI.</h2>
       <p class="lead rv" data-i18n="m.lead">I use AI to explore ideas, prototype faster and understand how things work. The goal isn't just to generate code — it's to learn from it, test it and make informed decisions. The projects below show where I am on that path.</p>
       <div class="layers rv">
         <div class="layer"><span class="mono"><b>01</b><span data-i18n="m.k1">role</span></span><p data-i18n="m.v1">Define the role like a class<small>Before a task, I describe who the assistant is, what it knows and how it should teach — properties first, then behaviour.</small></p></div>
@@ -445,42 +453,26 @@ main{position:relative;z-index:1}
   </section>
 
   <!-- 07 LAB: a calm reading room; the point cloud fades out while the projects are on screen -->
-  <section class="scene work" id="work" data-shape="clusters" data-side="left" data-label="work">
+  <section class="scene work" id="work" data-shape="braces" data-side="left" data-label="work">
     <div class="wk">
       <header class="wk-rv">
         <span class="tag mono" data-i18n="w.tag">[07] Liliana.exe · lab</span>
-        <h2 class="h2 wk-h2" data-scramble data-i18n="w.h2"><em>Experiments,</em> not just a portfolio.</h2>
+        <h2 class="h2 wk-h2" data-i18n="w.h2"><em>Experiments,</em> not just a portfolio.</h2>
         <p class="lead" data-i18n="w.lead">Not every experiment is a finished product. Not every project started from a blank page. But each one has a goal, my part in it, and something I learned.</p>
       </header>
 
       <div class="wk-group">
-        <div class="wk-head wk-rv"><b data-i18n="wk.sel">Selected · 3</b><span class="mono" data-i18n="wk.selS">AI · a client · this site</span></div>
+        <div class="wk-head wk-rv"><b data-i18n="wk.sel">Selected · 2</b><span class="mono" data-i18n="wk.selS">a client · this site</span></div>
+
 
         <article class="wk-project wk-rv">
-          <div class="wk-img"><img src="assets/work/nvidia.jpg" width="1000" height="750" alt="A cube and a sphere as a LiDAR point cloud" data-i18n-alt="wk.nv.alt" loading="lazy"></div>
-          <div>
-            <div class="wk-meta mono"><span class="wk-num">01</span><span data-i18n="wk.nv.m">Course project · Feb 2026</span><span class="stamp" data-i18n="wk.nv.st">Passed 10/10</span></div>
-            <h3 class="wk-h3" data-i18n="wk.nv.h">Seeing LiDAR <em>through</em> a camera</h3>
-            <p class="wk-hook" data-i18n="wk.nv.p">The final assessment of NVIDIA's course <i>Building AI Agents with Multimodal Models</i>.</p>
-            <div class="rows">
-              <div class="row"><span class="mono" data-i18n="wk.part">My part</span><span data-i18n="wk.nv.part">Completed the contrastive model, its loss and the projector in a guided notebook, in NVIDIA's GPU lab with their data and starter code.</span></div>
-              <div class="row"><span class="mono" data-i18n="wk.learned">Learned</span><span data-i18n="wk.nv.learned">How contrastive learning aligns two sensors, and how a projector bridges their spaces.</span></div>
-            </div>
-            <div class="wk-actions">
-              <a class="btn btn-sig" href="https://learn.nvidia.com/certificates?id=fL-EdYozTkat8q9Xl_9iTg" target="_blank" rel="noopener" data-i18n="feat.verify">Verify certificate ↗</a>
-              <a class="link" href="#featured" data-i18n="wk.nv.scan">See the scan ↑</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="wk-project flip wk-rv">
           <div class="wk-img"><img src="assets/work/paprika.jpg" width="1200" height="900" alt="Paprika website concept on a laptop and a phone" data-i18n-alt="wk.pp.alt" loading="lazy"></div>
           <div>
-            <div class="wk-meta mono"><span class="wk-num">02</span><span data-i18n="wk.pp.m">Website · 2026</span><span class="stamp" data-i18n="wk.pp.st">Client concept</span></div>
+            <div class="wk-meta mono"><span class="wk-num">01</span><span data-i18n="wk.pp.m">Website · 2026 · code with AI</span><span class="stamp" data-i18n="wk.pp.st">Client concept</span></div>
             <h3 class="wk-h3" data-i18n="wk.pp.h">Paprika — a <em>photographer's</em> website</h3>
             <p class="wk-hook" data-i18n="wk.pp.p">For family photographer Kristina Romanova: prints on a table turn into a film.</p>
             <div class="rows">
-              <div class="row"><span class="mono" data-i18n="wk.part">My part</span><span data-i18n="wk.pp.part">Concept, art direction, UX, text structure and phone testing; the code was written with AI assistance.</span></div>
+              <div class="row"><span class="mono" data-i18n="wk.part">My part</span><span data-i18n="wk.pp.part">Concept, art direction, UX, text structure and phone testing.</span></div>
               <div class="row"><span class="mono" data-i18n="wk.status">Status</span><span data-i18n="wk.pp.status">Concept approved by the client · launch after the original photos arrive.</span></div>
             </div>
             <div class="wk-actions">
@@ -489,15 +481,15 @@ main{position:relative;z-index:1}
           </div>
         </article>
 
-        <article class="wk-project wk-rv">
+        <article class="wk-project flip wk-rv">
           <div class="wk-img"><img src="assets/work/liliana.jpg" width="1200" height="900" alt="Liliana.exe on two phones" data-i18n-alt="wk.le.alt" loading="lazy"></div>
           <div>
-            <div class="wk-meta mono"><span class="wk-num">03</span><span data-i18n="wk.le.m">Personal website · 2026</span><span class="stamp" data-i18n="wk.le.st">Built with AI</span></div>
+            <div class="wk-meta mono"><span class="wk-num">02</span><span data-i18n="wk.le.m">Personal website · 2026</span><span class="stamp" data-i18n="wk.le.st">Built with AI</span></div>
             <h3 class="wk-h3">Liliana<em>.exe</em></h3>
             <p class="wk-sub" data-i18n="wk.le.sub">— you're looking at it</p>
-            <p class="wk-hook" data-i18n="wk.le.p">A portfolio that behaves like a LiDAR sensor: 16,000 points re-form into each part of my story.</p>
+            <p class="wk-hook" data-i18n="wk.le.p">A portfolio that behaves like a LiDAR sensor: the point cloud re-forms into each part of my story.</p>
             <div class="rows">
-              <div class="row"><span class="mono" data-i18n="wk.part">My part</span><span data-i18n="wk.le.part">Concept, story, all copy in English and Russian, art direction, testing on real phones; the code was written with AI assistance.</span></div>
+              <div class="row"><span class="mono" data-i18n="wk.part">My part</span><span data-i18n="wk.le.part">Concept, story, all copy in English and Russian, art direction, testing on real phones.</span></div>
               <div class="row"><span class="mono" data-i18n="wk.learned">Learned</span><span data-i18n="wk.le.learned">Real phones find what a laptop hides: blob-like points, foggy panels, a stalled CDN, a font with no Cyrillic.</span></div>
             </div>
             <div class="wk-actions">
@@ -509,34 +501,25 @@ main{position:relative;z-index:1}
       </div>
 
       <div class="wk-group wk-rv">
-        <div class="wk-head"><b data-i18n="wk.lab">Lab · 4</b><span class="mono" data-i18n="wk.labS">smaller experiments</span></div>
+        <div class="wk-head"><b data-i18n="wk.lab">Lab · 3</b><span class="mono" data-i18n="wk.labS">smaller experiments</span></div>
         <ul class="wk-lab">
-          <li><span class="n mono">01</span><div class="t"><b data-i18n="w2.h">Point-cloud self-portrait</b><span class="stamp" data-i18n="st.ai">Built with AI</span></div><p data-i18n="wk.l1">One photo → depth map → 16,000 points, with Depth Anything V2. The script was written with AI assistance.</p></li>
-          <li><span class="n mono">02</span><div class="t"><b data-i18n="w3.h">First GPU experiment</b><span class="stamp" data-i18n="st.guided">Guided</span></div><p data-i18n="wk.l2">A small CNN on Fashion-MNIST in a guided notebook: 89% after 3 epochs, 33 s on an Apple M4.</p></li>
-          <li><span class="n mono">03</span><div class="t"><b data-i18n="w4.h">Prompt engineering portfolio</b><span class="stamp" data-i18n="st.course">Coursework</span></div><p data-i18n="wk.l3">Ten prompts, five patterns, before/after refinements and an English–Russian comparison.</p></li>
-          <li><span class="n mono">04</span><div class="t"><b data-i18n="w5.h">Khorezm Solar project</b><span class="stamp" data-i18n="st.academic">Academic</span></div><p data-i18n="w5.p">A group study of solar energy as a climate solution, from an environmental NGO's perspective.</p></li>
+          <li><span class="n mono">01</span><div class="t"><b data-i18n="w3.h">First GPU experiment</b><span class="stamp" data-i18n="st.guided">Guided</span></div><p data-i18n="wk.l2">A small CNN on Fashion-MNIST in a guided notebook: 89% after 3 epochs, 33 s on an Apple M4.</p></li>
+          <li><span class="n mono">02</span><div class="t"><b data-i18n="w4.h">Prompt engineering portfolio</b><span class="stamp" data-i18n="st.course">Coursework</span></div><p data-i18n="wk.l3">Ten prompts, five patterns, before/after refinements and an English–Russian comparison.</p></li>
+          <li><span class="n mono">03</span><div class="t"><b data-i18n="w5.h">Khorezm Solar project</b><span class="stamp" data-i18n="st.academic">Academic</span></div><p data-i18n="w5.p">A group study of solar energy as a climate solution, from an environmental NGO's perspective.</p></li>
         </ul>
       </div>
 
       <div class="wk-group wk-rv">
-        <div class="wk-head"><b data-i18n="wk.wip">In progress</b><span class="mono" data-i18n="wk.wipS">what I'm building now</span></div>
-        <div class="wk-hero">
-          <div>
-            <span class="wk-live mono"><i></i><span data-i18n="wk.cc.m">In progress · my code</span></span>
-            <h3 class="wk-h3">Liliana.exe <em>Command</em> Center</h3>
-            <p data-i18n="wk.cc.p">A Java console app that grows into my personal OS: roadmap, learning hub, daily focus.</p>
-          </div>
-          <span class="wk-who mono" data-i18n="wk.cc.who">I write the code<br>AI reviews it</span>
-        </div>
+        <div class="wk-head"><b data-i18n="wk.wip">Next</b><span class="mono" data-i18n="wk.wipS">what's coming</span></div>
         <ul class="wk-next">
+          <li><span class="mono" data-i18n="wk.cc.d">In progress</span><span data-i18n="wk.cc.n"><b>Liliana.exe Command Center</b> — a Java console app I write myself; it will grow into my personal OS.</span></li>
           <li><span class="mono" data-i18n="wk.ws.d">Nov 5–10, 2026</span><span data-i18n="wk.ws.p"><b>AI-Assisted Game Development Workshop</b> — a game built during the workshop, documented here afterwards.</span></li>
-          <li><span class="mono" data-i18n="next.h">Next</span><span data-i18n="wk.py">Python + SQL — data analysis, after Java.</span></li>
         </ul>
       </div>
 
       <div class="wk-more wk-rv">
         <a class="btn" href="design.html" data-i18n="wk.arch">Design archive ↗</a>
-        <a class="btn" href="https://t.me/Leeloosh" target="_blank" rel="noopener" data-i18n="wk.tg">Lab notes on Telegram ↗</a>
+        <a class="btn" href="https://t.me/liliana0x" target="_blank" rel="noopener" data-i18n="wk.tg">Lab notes on Telegram ↗</a>
       </div>
     </div>
   </section>
@@ -554,6 +537,7 @@ PING liliana (Tashkent): 56 bytes</pre>
           <a href="mailto:Lsuleymanova@aut-edu.uz" class="btn" data-i18n="c.write">Write to me ↗</a>
           <button class="btn" id="copyBtn" type="button" data-i18n="ui.copy">Copy email</button>
         </div>
+        <p class="cv-note" data-i18n="c.cv">Full CV available on request — message me on Telegram or email.</p>
       </div>
       <ul class="socials rv">
         <li><a href="https://github.com/LilianaLabs" target="_blank" rel="noopener"><span>GitHub</span><span aria-hidden="true">↗</span></a></li>
@@ -575,24 +559,26 @@ PING liliana (Tashkent): 56 bytes</pre>
     'nav.hello': 'привет', 'nav.me': 'обо мне', 'nav.origin': 'откуда', 'nav.featured': 'главное', 'nav.stack': 'стек', 'nav.method': 'метод', 'nav.work': 'лаборатория', 'nav.contact': 'контакты',
     'hero.h1': 'Лилиана Сулейманова — студентка Computer Science из Ташкента',
     'hero.lead': 'Студентка CS из Ташкента. Учусь понимать, как машины <em>видят</em>.',
+    'hero.path': 'Мой путь: анализ данных → AI. Сейчас Java как фундамент, дальше Python и SQL.',
     'hero.hint': 'проведи курсором — потрогай скан',
     'hero.cta': '↓ Листай дальше',
     'me.tag': '[02] субъект · глубина по одному фото',
     'me.h2': 'Привет, я <em>Лилиана.</em>',
-    'me.lead': 'Мой путь в Computer Science складывался не по прямой: от телекоммуникаций и авиации до веб-дизайна и разработки. Сейчас я на втором курсе AUT, закладываю базу в Java и исследую AI-assisted development, компьютерное зрение и интерактивные системы.',
+    'me.lead': 'Мой путь в Computer Science складывался не по прямой: от телекоммуникаций и авиации до веб-дизайна. В дизайне мне захотелось понимать, как работает то, что я рисую, — так я пришла в код. Сейчас закладываю <b class="key">базу в Java</b> и разбираюсь, как устроены компьютерное зрение и AI-ассистенты.',
     'me.note': 'Этот портрет — не фотография. Нейросеть <b>Depth Anything V2</b> оценила глубину по одному снимку, а скрипт, написанный с помощью AI, превратил её в 16 000 точек. Поверни его курсором или свайпом.',
-    'me.bgK': 'Путь', 'me.bgV': 'Телеком → авиация → <a class="inline-link" href="design.html">бренд- и веб-дизайн ↗</a>',
-    'me.langK': 'Языки', 'me.langV': 'Русский · узбекский · английский',
-    'origin.tag': '[03] откуда · 41.31°N 69.24°E',
-    'origin.h2': 'Живу в <em>Ташкенте.</em>',
-    'origin.lead': 'Студентка второго курса Computer Science в American University of Technology (powered by ASU). Ищу первую стажировку в IT — писать код, работать с данными и SQL или помогать в AI-проекте — там, где можно продолжать учиться у команды.',
+    'me.bgK': 'Дизайн', 'me.bgV': '<a class="inline-link" href="design.html">Архив бренд- и веб-дизайна ↗</a>',
+    'me.langK': 'Языки', 'me.langV': 'Русский (родной) · английский (B2) · узбекский (базовый)',
+    'origin.tag': '[03] статус · 41.31°N 69.24°E',
+    'origin.h2': 'Ищу <em>стажировку.</em>',
+    'origin.lead': 'Учусь на втором курсе Computer Science в <b class="key">American University of Technology</b>, powered by <b class="key">Arizona State University</b>. Ищу первую стажировку в анализе данных или в AI-команде — где можно работать с данными, SQL и Python и учиться у людей рядом.',
     'origin.k1': 'Учёба', 'origin.v1': 'B.S. Computer Science · 2-й курс',
     'origin.k2': 'Ищу', 'origin.v2': 'Стажировку в разработке, анализе данных и SQL или в AI-проектах',
-    'origin.k3': 'Также открыта к', 'origin.v3': 'Любому хорошему IT-проекту, где пригодятся креативность и нелинейный опыт, — включая хакатоны и студенческие команды',
+    'origin.k3': 'Также открыта к', 'origin.v3': 'Стажировке в разработке, хакатонам и студенческим командам',
+    'origin.k5': 'Выпуск', 'origin.k6': 'График', 'origin.v6': 'Гибкий — обсудим',
     'origin.k4': 'Где', 'origin.v4': 'Ташкент · удалённо',
     'feat.tag': '[04] главное · учебный проект NVIDIA DLI',
     'feat.h2': 'Увидеть LiDAR <em>через</em> камеру.',
-    'feat.lead': 'Итоговое задание курса NVIDIA <i>Building AI Agents with Multimodal Models</i>. LiDAR-модель умела отличать <b>кубы</b> от <b>сфер</b>, но LiDAR-датчики встречаются редко. В GPU-лаборатории NVIDIA, на их данных и стартовом коде, я доделала контрастную модель в духе CLIP и проектор, который переводит эмбеддинги камеры в пространство LiDAR-модели, — и тот же классификатор заработал по обычной камере.',
+    'feat.lead': 'Итоговое задание курса NVIDIA <i>Building AI Agents with Multimodal Models</i>. LiDAR-модель умела отличать <b>кубы</b> от <b>сфер</b>, но LiDAR-датчики встречаются редко. В GPU-лаборатории NVIDIA, на их данных и стартовом коде, я доделала контрастную модель в духе CLIP и проектор, который переводит эмбеддинги камеры в пространство LiDAR-модели, — и <b class="key">тот же классификатор заработал по обычной камере</b>.',
     'feat.k1': 'Мой вклад', 'feat.v1': 'Дописала контрастную модель, её функцию потерь и проектор в учебном ноутбуке',
     'feat.k2': 'Чему научилась', 'feat.v2': 'Как контрастное обучение связывает два сенсора и как проектор соединяет их пространства',
     'feat.s1': 'пар данных · Omniverse', 'feat.s2': 'итоговая проверка', 'feat.s3': 'лаборатория NVIDIA · PyTorch',
@@ -602,9 +588,9 @@ PING liliana (Tashkent): 56 bytes</pre>
     'stack.tag': '[05] стек · 4 слоя',
     'stack.h2': 'Мой стек — <em>как</em> нейросеть.',
     'stack.in': 'вход', 'stack.hid': 'скрытый', 'stack.out': 'выход',
-    'stack.l1': 'Java, Python<small>сейчас в фокусе Java: ООП, классы, массивы · основы Python</small>',
+    'stack.l1': 'Java (базовый)<small>текущий курс: ООП, классы, массивы · в IntelliJ IDEA</small>',
     'stack.l2': 'Компьютерное зрение и мультимодальный AI<small>знакомство через NVIDIA DLI: CNN, контрастное обучение, PyTorch</small>',
-    'stack.l3': 'Figma, Photoshop, HTML и CSS, Git, Jupyter<small>опыт в дизайне плюс разработка с AI-ассистентами</small>',
+    'stack.l3': 'AI-инструменты, Git, Figma, Photoshop<small>промпты, проверка и тестирование того, что делает AI · контроль версий в Git · дизайн-инструменты из прошлого опыта</small>',
     'stack.l4': 'Дальше: Python → анализ данных и SQL<small>на пути к ML и компьютерному зрению</small>',
     'm.tag': '[06] метод · как я использую AI',
     'm.h2': 'Как я работаю <em>с</em> AI.',
@@ -623,7 +609,7 @@ PING liliana (Tashkent): 56 bytes</pre>
     'w5.h': 'Солнечная энергия в Хорезме',
     'w5.p': 'Групповое исследование солнечной энергетики как ответа на изменение климата — с позиции экологической НКО.',
     'next.h': 'Дальше',
-    'wk.sel': 'Избранное · 3', 'wk.selS': 'AI · клиент · этот сайт',
+    'wk.sel': 'Избранное · 2', 'wk.selS': 'клиент · этот сайт',
     'wk.part': 'Мой вклад', 'wk.learned': 'Научилась', 'wk.status': 'Статус', 'wk.case': 'Кейс ↗',
     'wk.nv.alt': 'Куб и сфера в виде облака точек LiDAR',
     'wk.nv.m': 'Учебный проект · фев 2026', 'wk.nv.st': 'Сдано на 10/10',
@@ -633,32 +619,36 @@ PING liliana (Tashkent): 56 bytes</pre>
     'wk.nv.learned': 'Как контрастное обучение связывает два сенсора и как проектор соединяет их пространства.',
     'wk.nv.scan': 'Смотреть скан ↑',
     'wk.pp.alt': 'Концепт сайта Paprika на ноутбуке и телефоне',
-    'wk.pp.m': 'Сайт · 2026', 'wk.pp.st': 'Концепт для клиента',
+    'wk.pp.m': 'Сайт · 2026 · код с AI', 'wk.pp.st': 'Концепт для клиента',
     'wk.pp.h': 'Paprika — сайт <em>фотографа</em>',
     'wk.pp.p': 'Для семейного фотографа Кристины Романовой: отпечатки на столе превращаются в кино.',
-    'wk.pp.part': 'Концепция, арт-дирекшн, UX, структура текстов и тест на телефоне; код написан с помощью AI.',
+    'wk.pp.part': 'Концепция, арт-дирекшн, UX, структура текстов и тест на телефоне.',
     'wk.pp.status': 'Концепт одобрен клиентом · запуск после получения оригиналов фото.',
     'wk.le.alt': 'Liliana.exe на двух телефонах',
     'wk.le.m': 'Личный сайт · 2026', 'wk.le.st': 'Сделано с AI',
     'wk.le.sub': '— вы сейчас на нём',
-    'wk.le.p': 'Портфолио, которое ведёт себя как LiDAR-датчик: 16 000 точек перестраиваются под каждую часть моей истории.',
-    'wk.le.part': 'Концепция, история, все тексты на английском и русском, арт-дирекшн, тест на реальных телефонах; код написан с помощью AI.',
+    'wk.le.p': 'Портфолио, которое ведёт себя как LiDAR-датчик: облако точек перестраивается под каждую часть моей истории.',
+    'wk.le.part': 'Концепция, история, все тексты на английском и русском, арт-дирекшн, тест на реальных телефонах.',
     'wk.le.learned': 'Реальный телефон показывает то, что прячет ноутбук: точки-кляксы, мутные панели, зависший CDN, шрифт без кириллицы.',
     'wk.le.back': 'Назад к скану ↑',
-    'wk.lab': 'Лаборатория · 4', 'wk.labS': 'небольшие эксперименты',
+    'wk.lab': 'Лаборатория · 3', 'wk.labS': 'небольшие эксперименты',
     'wk.l1': 'Одно фото → карта глубины → 16 000 точек, на Depth Anything V2. Скрипт написан с помощью AI.',
     'wk.l2': 'Небольшая CNN на Fashion-MNIST в учебном ноутбуке: 89% после 3 эпох, 33 секунды на Apple M4.',
     'wk.l3': 'Десять промптов, пять техник, разбор «до и после» и сравнение английского и русского.',
-    'wk.wip': 'В работе', 'wk.wipS': 'что я делаю сейчас',
-    'wk.cc.m': 'В работе · мой код',
+    'wk.wip': 'Дальше', 'wk.wipS': 'что впереди',
+    'wk.cc.d': 'В работе', 'wk.cc.n': '<b>Liliana.exe Command Center</b> — консольное приложение на Java, которое пишу сама; со временем вырастет в мою личную ОС.',
+    'wk.cc.m2': 'Консольное приложение на Java · 2026', 'wk.cc.st': 'Мой код · v0.1',
+    'wk.cc.part': 'Каждую строку пишу сама; AI проверяет и объясняет, но не пишет за меня.',
+    'wk.cc.status': 'v0.1 — первая строка запускается. Новые функции добавляю по одной, по мере того как учу нужную Java.',
     'wk.cc.p': 'Консольное приложение на Java, которое растёт в мою личную ОС: роадмап, учебный хаб, фокус дня.',
     'wk.cc.who': 'Код пишу я<br>AI делает ревью',
     'wk.ws.d': '5–10 ноября 2026',
     'wk.ws.p': '<b>Воркшоп по разработке игр с AI</b> — игру, сделанную на воркшопе, покажу здесь после.',
     'wk.py': 'Python + SQL — анализ данных, после Java.',
     'wk.arch': 'Архив дизайна ↗', 'wk.tg': 'Заметки в Telegram ↗',
-    'c.tag': '[08] контакты · пингуй — открыта к стажировкам',
+    'c.tag': '[08] контакты · напиши мне — открыта к стажировкам',
     'c.ping': 'Отправить пинг ⟶', 'c.write': 'Написать мне ↗',
+    'c.cv': 'Полное CV пришлю по запросу — пишите в Telegram или на почту.',
   };
   const EN_UI = { 'ui.menu': 'Menu', 'ui.close': 'Close', 'ui.copy': 'Copy email', 'ui.copied': 'Copied ✓' };
   const LABELS = {
